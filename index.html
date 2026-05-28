@@ -1,4 +1,54 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Connect Wallet - ARC Network</title><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"><style>body{background-color:#f0f5f7;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;height:100vh;margin:0}.connect-container{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#e0f2f1 0,#b2dfdb 100%)}.wallet-card{background:#fff;padding:40px;border-radius:20px;box-shadow:0 10px 30px rgba(0,77,64,.1);text-align:center;max-width:450px;width:100%;border:1px solid rgba(0,121,107,.1)}.brand-logo{font-size:50px;color:#004d40;margin-bottom:15px}.wallet-card h2{color:#004d40;font-weight:700;font-size:28px;margin-bottom:10px}.wallet-card p{color:#00796b;font-size:15px;margin-bottom:30px}.btn-connect{background-color:#00796b;border-color:#00796b;color:#fff;font-weight:600;padding:12px 30px;border-radius:50px;font-size:16px;width:100%;transition:all .3s ease;box-shadow:0 4px 15px rgba(0,121,107,.2)}.btn-connect:hover{background-color:#004d40;border-color:#004d40;color:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,77,64,.3)}.btn-connect:disabled{background-color:#a7ffeb;border-color:#a7ffeb;color:#004d40;cursor:not-allowed;transform:none;box-shadow:none}.btn-logout{background-color:#e57373;border-color:#e57373;color:#fff;font-weight:600;padding:12px 30px;border-radius:50px;font-size:16px;width:100%;transition:all .3s ease;box-shadow:0 4px 15px rgba(229,115,115,.2);display:none}.btn-logout:hover{background-color:#c62828;border-color:#c62828;color:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(198,40,40,.3)}.footer-note{font-size:12px;color:#00796b;margin-top:25px;opacity:.8}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script></head><body><div class="connect-container"><div class="wallet-card"><div class="brand-logo" id="card-icon"><i class="fas fa-comments-dollar"></i></div><h2 id="card-title">Welcome to ARC Chat</h2><p id="status-text">Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.</p><button class="btn btn-connect btn-lg" id="connect-btn" onclick="connectWallet()"><i class="fas fa-wallet mr-2"></i>Connect Wallet</button><button class="btn btn-logout btn-lg" id="logout-btn" onclick="logoutWallet()"><i class="fas fa-sign-out-alt mr-2"></i>Log out</button><div class="footer-note"><i class="fas fa-shield-alt mr-1"></i>Secured by ARC Testnet Blockchain</div></div></div><script>let provider;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Connect Wallet - ARC Network</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body{background-color:#f0f5f7;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;height:100vh;margin:0}
+        .connect-container{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#e0f2f1 0,#b2dfdb 100%)}
+        .wallet-card{background:#fff;padding:40px;border-radius:20px;box-shadow:0 10px 30px rgba(0,77,64,.1);text-align:center;max-width:450px;width:100%;border:1px solid rgba(0,121,107,.1)}
+        .brand-logo{font-size:50px;color:#004d40;margin-bottom:15px}
+        .wallet-card h2{color:#004d40;font-weight:700;font-size:28px;margin-bottom:10px}
+        .wallet-card p{color:#00796b;font-size:15px;margin-bottom:30px}
+        
+        .btn-connect{background-color:#00796b;border-color:#00796b;color:#fff;font-weight:600;padding:12px 30px;border-radius:50px;font-size:16px;width:100%;transition:all .3s ease;box-shadow:0 4px 15px rgba(0,121,107,.2)}
+        .btn-connect:hover{background-color:#004d40;border-color:#004d40;color:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,77,64,.3)}
+        .btn-connect:disabled{background-color:#a7ffeb;border-color:#a7ffeb;color:#004d40;cursor:not-allowed;transform:none;box-shadow:none}
+        
+        /* --- වෙනස් කරන ලද "Log out" බටන් එකේ Style එක --- */
+        .btn-logout{background-color:#e57373;border-color:#e57373;color:#fff;font-weight:600;padding:12px 30px;border-radius:50px;font-size:16px;width:100%;transition:all .3s ease;box-shadow:0 4px 15px rgba(229,115,115,.2);display:none}
+        .btn-logout:hover{background-color:#c62828;border-color:#c62828;color:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(198,40,40,.3)}
+        
+        .footer-note{font-size:12px;color:#00796b;margin-top:25px;opacity:.8}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+</head>
+<body>
+    <div class="connect-container">
+        <div class="wallet-card">
+            <div class="brand-logo" id="card-icon">
+                <i class="fas fa-comments-dollar"></i>
+            </div>
+            <h2 id="card-title">Welcome to ARC Chat</h2>
+            <p id="status-text">Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.</p>
+            
+            <button class="btn btn-connect btn-lg" id="connect-btn" onclick="connectWallet()">
+                <i class="fas fa-wallet mr-2"></i>Connect Wallet
+            </button>
+            
+            <button class="btn btn-logout btn-lg" id="logout-btn" onclick="logoutWallet()">
+                <i class="fas fa-sign-out-alt mr-2"></i>Log out
+            </button>
+            
+            <div class="footer-note"><i class="fas fa-shield-alt mr-1"></i>Secured by ARC Testnet Blockchain</div>
+        </div>
+    </div>
+
+    <script>
+        let provider;
         let signer;
 
         // Wallet එක connect කරන Function එක
@@ -72,4 +122,7 @@
             connectBtn.innerHTML = `<i class="fas fa-wallet mr-2"></i> Connect Wallet`;
 
             console.log("Wallet logged out from App UI.");
-        }</script></body></html>
+        }
+    </script>
+</body>
+</html>
