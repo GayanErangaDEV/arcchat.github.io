@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="#0D1117"/>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0052D4" />
+      <stop offset="50%" stop-color="#4364F7" />
+      <stop offset="100%" stop-color="#00F2FE" />
+    </linearGradient>
+  </defs>
+
+  <!-- The "ARC" Symbol -->
+  <g fill="none" stroke="url(#arcGradient)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main 'A' Shape -->
+    <path d="M176 320 L256 128 L336 320" />
+    <!-- The Arc / Envelope Flap -->
+    <path d="M206 245 Q256 295 306 245" />
+  </g>
+
+  <!-- "ARC Mail" Text -->
+  <text x="256" y="410" 
+        text-anchor="middle" 
+        fill="url(#arcGradient)" 
+        font-family="system-ui, -apple-system, sans-serif" 
+        font-weight="800" 
+        font-size="42" 
+        letter-spacing="2">ARC Mail</text>
+</svg>
