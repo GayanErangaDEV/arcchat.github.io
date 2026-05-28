@@ -11,144 +11,63 @@
 
     <style>
         body {
-            background-color: #0d1b2a;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f0f5f7;
+            font-family: 'Segoe UI', sans-serif;
             height: 100vh;
             margin: 0;
             overflow: hidden;
         }
         
-        /* --- HIGH QUALITY MODERN WALLET CONNECT SCREEN --- */
+        /* --- Wallet Connect Screen Styling --- */
         .connect-screen {
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            position: relative;
-            /* Premium Dark Cyber Glow Gradient */
-            background: radial-gradient(circle at 50% 50%, #0f3d3e 0%, #081c15 100%);
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
         }
-
-        /* පසුබිමේ ඇති ලස්සන අලංකාර රවුම් (Ambient Glow Elements) */
-        .connect-screen::before, .connect-screen::after {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: rgba(0, 180, 216, 0.15);
-            filter: blur(80px);
-            z-index: 1;
-        }
-        .connect-screen::before { top: 10%; left: 15%; background: rgba(178, 223, 219, 0.12); }
-        .connect-screen::after { bottom: 10%; right: 15%; background: rgba(0, 131, 143, 0.2); }
-
         .wallet-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 50px 40px;
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 77, 64, 0.1);
             text-align: center;
-            max-width: 460px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            z-index: 2;
-            transition: transform 0.3s ease;
+            max-width: 450px;
+            width: 100%;
+            border: 1px solid rgba(0, 121, 107, 0.1);
         }
-        
-        .wallet-card:hover {
-            transform: translateY(-5px);
-        }
-
         .brand-logo {
-            font-size: 55px;
-            background: linear-gradient(45deg, #b2dfdb, #00e5ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 25px;
-            display: inline-block;
-            filter: drop-shadow(0 4px 12px rgba(0, 229, 255, 0.2));
-            animation: float 3s ease-in-out infinite;
+            font-size: 50px;
+            color: #004d40;
+            margin-bottom: 15px;
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
         .wallet-card h2 {
-            color: #ffffff;
+            color: #004d40;
             font-weight: 700;
-            font-size: 32px;
-            letter-spacing: -0.5px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-
         .wallet-card p {
-            color: #b2dfdb;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 35px;
-            font-weight: 400;
-            opacity: 0.9;
+            color: #00796b;
+            font-size: 14px;
+            margin-bottom: 30px;
         }
-
-        /* Cyberpunk Styled Premium Button */
         .btn-connect {
-            background: linear-gradient(135deg, #00838f 0%, #004d40 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #00796b;
+            border-color: #00796b;
             color: #ffffff;
             font-weight: 600;
-            letter-spacing: 0.5px;
-            padding: 15px 35px;
+            padding: 12px 30px;
             border-radius: 50px;
             width: 100%;
-            font-size: 17px;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            box-shadow: 0 8px 25px rgba(0, 77, 64, 0.4);
-            cursor: pointer;
+            transition: all 0.3s ease;
         }
-
         .btn-connect:hover {
-            background: linear-gradient(135deg, #00a1b0 0%, #00796b 100%);
-            color: #ffffff;
-            transform: scale(1.02);
-            box-shadow: 0 12px 30px rgba(0, 229, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .btn-connect active {
-            transform: scale(0.98);
+            background-color: #004d40;
+            border-color: #004d40;
+            transform: translateY(-2px);
         }
 
-        .footer-note {
-            font-size: 12px;
-            color: #80cbc4;
-            margin-top: 30px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            opacity: 0.7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        .footer-note i {
-            color: #00e5ff;
-        }
-
-        #syncStatus {
-            font-size: 12px;
-            color: #00e5ff;
-            font-weight: 500;
-        }
-
-        /* --- MAIN APP SCREEN STYLING (UNCHANGED) --- */
+        /* --- Main App Screen Styling --- */
         .app-container {
             display: none;
             height: 100vh;
@@ -164,30 +83,57 @@
             flex-direction: column;
             height: 100vh;
         }
-        .search-box { padding: 15px; background: #004d40; }
+        .search-box {
+            padding: 15px;
+            background: #004d40;
+        }
         .search-box input {
-            background: #00796b; border: none; border-radius: 5px; color: #fff;
-            padding: 8px 12px; width: 100%; outline: 0; font-size: 14px;
+            background: #00796b;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            padding: 8px 12px;
+            width: 100%;
+            outline: 0;
+            font-size: 14px;
         }
         .search-box input::placeholder { color: #b2dfdb; }
         .chat-list { flex: 1; overflow-y: auto; }
         .chat-item {
-            padding: 15px; border-bottom: 1px solid #00332c; cursor: pointer;
-            display: flex; align-items: center; color: #fff;
+            padding: 15px;
+            border-bottom: 1px solid #00332c;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: #fff;
         }
-        .chat-item.active, .chat-item:hover { background: #00796b; text-decoration: none; color: #fff; }
+        .chat-item.active, .chat-item:hover {
+            background: #00796b;
+            text-decoration: none;
+            color: #fff;
+        }
         .chat-item img { width: 40px; height: 40px; border-radius: 50%; margin-right: 12px; }
         .chat-area {
-            display: flex; flex-direction: column; background: #e0f2f1;
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #e0f2f1;
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            height: 100vh;
         }
         .chat-header {
-            background: #004d40; color: #fff; padding: 15px 20px; display: flex;
-            align-items: center; border-bottom: 1px solid #00332c; justify-content: space-between;
+            background: #004d40;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #00332c;
+            justify-content: space-between;
         }
         .chat-header-info { display: flex; align-items: center; }
         .chat-header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; }
         .chat-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
+        
+        /* Messages Styling */
         .message { margin-bottom: 15px; display: flex; flex-direction: column; max-width: 70%; position: relative; }
         .message.received { align-items: flex-start; align-self: flex-start; }
         .message.sent { align-items: flex-end; align-self: flex-end; }
@@ -199,9 +145,11 @@
         .msg-actions { font-size: 10px; color: #00796b; margin-top: 3px; display: flex; gap: 10px; }
         .msg-actions span { cursor: pointer; }
         .msg-actions span:hover { color: #004d40; font-weight: 700; }
+        
         .chat-footer { padding: 15px; background: #004d40; display: flex; align-items: center; }
         .chat-footer input {
-            flex: 1; background: #00796b; border: none; border-radius: 20px; padding: 10px 20px; color: #fff; outline: 0;
+            flex: 1; background: #00796b; border: none; border-radius: 20px;
+            padding: 10px 20px; color: #fff; outline: 0;
         }
         .chat-footer input::placeholder { color: #b2dfdb; }
         .send-btn { background: 0 0; border: none; color: #fff; font-size: 22px; margin-left: 15px; cursor: pointer; }
@@ -213,56 +161,49 @@
 </head>
 <body>
 
-<div class="connect-screen" id="connectScreen">
+<div class="connect-screen" id=connectScreen>
     <div class="wallet-card">
-        <div class="brand-logo"><i class="fas fa-shield-alt"></i></div>
-        
-        <h2>Welcome to ARC Chat</h2>
+        <div class="brand-logo"><i class="fas fa-comments"></i></div>
+        <h2>ARC Chat</h2>
         <p>Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.</p>
-        
-        <button class="btn btn-connect btn-lg" onclick="connectWallet()">
+        <button class="btn btn-connect btn-lg" onclick=connectWallet()>
             <i class="fas fa-wallet mr-2"></i> Connect Wallet
         </button>
-        
-        <div class="mt-4" id="syncStatus"> Checking network connection...</div>
-        
-        <div class="footer-note">
-            <i class="fas fa-link"></i> Secured by ARC Testnet Blockchain
-        </div>
+        <div class="mt-3 text-muted" id="syncStatus" style="font-size: 11px;"> Checking previous connection...</div>
     </div>
 </div>
 
-<div class="app-container row no-gutters" id="appScreen">
+<div class="app-container row no-gutters" id=appScreen>
     <div class="col-md-4 col-4 sidebar">
-        <div class="search-box">
-            <input id="searchAddressInput" placeholder="Search Wallet Address + Enter..." onkeypress="handleSearch(event)">
+        <div class=search-box>
+            <input id=searchAddressInput placeholder="Search Wallet Address + Enter..." onkeypress=handleSearch(event)>
         </div>
-        <div class="chat-list" id="chatListContainer"></div>
+        <div class=chat-list id=chatListContainer></div>
     </div>
     
-    <div class="col-md-8 col-8 chat-area" id="chatAreaContainer">
-        <div class="no-chat-selected" id="noChatPlaceholder">
+    <div class="col-md-8 col-8 chat-area" id=chatAreaContainer>
+        <div class=no-chat-selected id=noChatPlaceholder>
             Select or search a user to start conversation
         </div>
         
-        <div id="activeChatBox" style="display:none; flex-direction:column; height:100%">
-            <div class="chat-header">
-                <div class="chat-header-info">
-                    <img src="https://ui-avatars.com/api/?name=User&background=random" id="activeChatAvatar" alt="Avatar">
+        <div id=activeChatBox style="display:none; flex-direction:column; height:100%">
+            <div class=chat-header>
+                <div class=chat-header-info>
+                    <img src="https://ui-avatars.com/api/?name=User&background=random" id=activeChatAvatar alt=Avatar>
                     <div>
-                        <h5 class=mb-0 id="activeChatTitle">0x000...000</h5>
-                        <small class="text-info" id="activeChatSubtitle" style="color:#b2dfdb!important">End-to-End Blockchain Chat</small>
+                        <h5 class=mb-0 id=activeChatTitle>0x000...000</h5>
+                        <small class=text-info id=activeChatSubtitle style="color:#b2dfdb!important">End-to-End Blockchain Chat</small>
                     </div>
                 </div>
-                <div class="header-actions">
-                    <div class="label-chat-btn" id="labelChatBtn" title="Set/Remove Wallet Tag Name"><i class="fas fa-tag"></i></div>
-                    <div class="delete-chat-btn" id="deleteChatBtn" title="Close conversation view"><i class="fas fa-trash-alt"></i></div>
+                <div class=header-actions>
+                    <div class=label-chat-btn id=labelChatBtn title="Set/Remove Wallet Tag Name"><i class="fas fa-tag"></i></div>
+                    <div class=delete-chat-btn id=deleteChatBtn title="Close conversation view"><i class="fas fa-trash-alt"></i></div>
                 </div>
             </div>
-            <div class="chat-body" id="chatBody"></div>
-            <div class="chat-footer">
-                <input id="messageInput" placeholder="Write a message...">
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            <div class=chat-body id=chatBody></div>
+            <div class=chat-footer>
+                <input id=messageInput placeholder="Write a message...">
+                <button class=send-btn id=sendBtn onclick=sendMessage()><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -275,6 +216,7 @@ contractABI=["function sendMessage(address _receiver, string _content) public","
 
 let provider, signer, contract, userAccount, activeChatUser=null, loadedMessageIds=new Set, globalSyncInterval=null;
 
+// පිටුව Load වෙද්දීම කලින් Connect වුණු කෙනෙක්ද බලන Auto-Load කොටස
 $(document).ready(async function() {
     if (window.ethereum) {
         try {
@@ -285,14 +227,14 @@ $(document).ready(async function() {
                 $("#syncStatus").html('<i class="fas fa-spinner fa-spin"></i> Restoring secure session...');
                 await initApp();
             } else {
-                $("#syncStatus").text("Ready to secure connection.");
+                $("#syncStatus").text("Please connect your wallet to continue.");
             }
         } catch (err) {
             console.error(err);
-            $("#syncStatus").text("Detection paused.");
+            $("#syncStatus").text("Wallet detection paused.");
         }
     } else {
-        $("#syncStatus").text("Web3 extension missing.");
+        $("#syncStatus").text("MetaMask or OKX Wallet extension required.");
     }
 });
 
@@ -306,6 +248,7 @@ async function initApp() {
     $("#connectScreen").hide();
     $("#appScreen").css("display","flex");
     
+    // Auto Load Chat History Sidebar
     await loadChatHistory();
     startGlobalSync();
 }
