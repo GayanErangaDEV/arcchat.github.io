@@ -3,7 +3,7 @@
 <head>
 <meta charset=UTF-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
-<title>ARC Chat (Auto-Load Enabled)</title>
+<title>ARC Chat</title>
 <link rel=icon type=image/x-icon href="gemini-svg (1).svg">
 <link rel=stylesheet href=https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css>
 <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
@@ -15,7 +15,6 @@
 <div class=connect-screen id=connectScreen>
 <h2 class=mb-3>ARC Chat</h2>
 <button class="btn btn-primary btn-lg" onclick=connectWallet()><i class="fas fa-wallet mr-2"></i> Connect Wallet</button>
-<p class="text-muted mt-3" style="font-size:12px;">or waiting for auto-recovery...</p>
 </div>
 <div class="app-container row no-gutters" id=appScreen>
 <div class="col-md-4 col-4 sidebar">
@@ -57,46 +56,29 @@ contractABI=["function sendMessage(address _receiver, string _content) public","
 
 let provider, signer, contract, userAccount, activeChatUser=null, loadedMessageIds=new Set, globalSyncInterval=null;
 
-// පිටුව Load වෙද්දීම auto check කරන function එක
+// සයිට් එකට ආපු ගමන් MetaMask කලින්ම connect ද කියලා බලනවා
 $(document).ready(async function() {
-    // 1. කලින් ලොග් වුනු wallet එකක් LocalStorage එකේ තියෙනවද බලන්න
-    const savedAccount = localStorage.getItem("last_active_wallet");
-    
     if (window.ethereum) {
         provider = new ethers.providers.Web3Provider(window.ethereum);
-        // පසුබිමෙන් (silently) දැනටමත් metamask එක connect ද බලනවා
         const accounts = await provider.listAccounts();
         if (accounts.length > 0) {
             userAccount = accounts[0];
             await initApp();
-            return;
         }
-    }
-    
-    // 2. මෙටාමාස්ක් නැතත් public RPC එකක් හරහා කලින් එකවුන්ට් එකේ හිස්ට්‍රියක් පෙන්වන්න
-    if (savedAccount) {
-        userAccount = savedAccount;
-        // Public RPC එකක් පාවිච්චි කරලා read-only විදියට load කරනවා
-        provider = new ethers.providers.JsonRpcProvider("https://rpc.testnet.arc.network");
-        contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, provider);
-        
-        $("#connectScreen").hide();
-        $("#appScreen").css("display","flex");
-        await loadChatHistory();
-        startGlobalSync();
     }
 });
 
 async function initApp() {
     signer = provider.getSigner();
     contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
-    localStorage.setItem("last_active_wallet", userAccount); // එකවුන්ට් එක සේව් කරගන්නවා
 
-    window.ethereum.on("accountsChanged", (e => { window.location.reload() }));
+    window.ethereum.on("accountsChanged", (() => { window.location.reload() }));
     window.ethereum.on("chainChanged", (() => { window.location.reload() }));
 
     $("#connectScreen").hide();
     $("#appScreen").css("display","flex");
+    
+    // මෙතනදී Auto Load වෙනවා Chat List එක
     await loadChatHistory();
     startGlobalSync();
 }
@@ -126,10 +108,11 @@ async function getOnChainWalletLabel(e){
 
 async function loadChatHistory(){
     let e=$("#chatListContainer");
-    0===e.children().length&&e.html('<p class="text-center text-muted mt-4" style="font-size: 11px; color: #b2dfdb !important;"><i class="fas fa-spinner fa-spin mr-1"></i> Syncing secure chats from ARC Network...</p>');
+    e.html('<p class="text-center text-muted mt-4" style="font-size: 11px; color: #b2dfdb !important;"><i class="fas fa-spinner fa-spin mr-1"></i> Syncing secure chats from ARC Network...</p>');
     try{
         const t=await contract.getUserChatList(userAccount);
-        if(e.empty(),t&&t.length>0){
+        e.empty();
+        if(t && t.length>0){
             let a=[...t].sort(((e,t)=>t.lastMessageTimestamp.toNumber()-e.lastMessageTimestamp.toNumber()));
             for(let t of a){
                 let a=t.walletAddress,s=new Date(1e3*t.lastMessageTimestamp.toNumber()).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),n=await getOnChainWalletLabel(a),i=activeChatUser&&activeChatUser.toLowerCase()===a.toLowerCase()?"active":"",r=n?`${n} <small style="display:block; font-size:10px; opacity:0.7;">${a.substring(0,6)}...${a.substring(38)}</small>`:`<strong>${a.substring(0,6)}...${a.substring(38)}</strong>`;
@@ -143,7 +126,7 @@ function handleSearch(e){
     if("Enter"===e.key){
         let e=$("#searchAddressInput").val().trim();
         if(!ethers.utils.isAddress(e))return void alert("Invalid Address!");
-        if(userAccount && e.toLowerCase()===userAccount.toLowerCase())return void alert("You cannot chat with yourself!");
+        if(e.toLowerCase()===userAccount.toLowerCase())return void alert("You cannot chat with yourself!");
         openConversation(e),$("#searchAddressInput").val("")
     }
 }
@@ -157,28 +140,30 @@ async function openConversation(e){
 async function loadMessages(){
     if(activeChatUser)try{
         const e=await contract.getMessagesWith(activeChatUser);
-        if($(".placeholder-loading").remove(),0===e.length&&0===loadedMessageIds.size)return void $("#chatBody").html('<p class="text-center text-muted no-msg-notice" style="margin-top:20px; color: #004d40;">No messages yet.</p>');
+        $(".placeholder-loading").remove();
+        if(0===e.length&&0===loadedMessageIds.size)return void $("#chatBody").html('<p class="text-center text-muted no-msg-notice" style="margin-top:20px; color: #004d40;">No messages yet.</p>');
         let t=!1;
         e.forEach((e=>{
             const a=e.id.toString();
             if(e.isDeleted)return $(`[data-id="${a}"]`).remove(),void loadedMessageIds.delete(a);
-            const s=userAccount && e.sender.toLowerCase()===userAccount.toLowerCase(),n=s?"sent":"received",i=e.isEdited?"<small style='font-size:10px; color:#b2dfdb;'>(edited)</small>":"",r=new Date(1e3*e.timestamp).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+            const s=e.sender.toLowerCase()===userAccount.toLowerCase(),n=s?"sent":"received",i=e.isEdited?"<small style='font-size:10px; color:#b2dfdb;'>(edited)</small>":"",r=new Date(1e3*e.timestamp).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
             if(loadedMessageIds.has(a)){
                 let t=$(`[data-id="${a}"] .bubble div:first-child`);
                 return void(t.text()!==e.content&&(t.text(e.content),$(`[data-id="${a}"] .msg-time`).html(`${r} ${i}`)))
             }
             $(".no-msg-notice").remove();
-            let o=$(`\n                        <div class="message ${n}" data-id="${a}">\n                            <div class="bubble">\n                                <div></div>\n                                <span class="msg-time text-right">${r} ${i}</span>\n                            </div>\n                            ${s?'\n                        <div class="msg-actions">\n                            <span class="edit-action-btn"><i class="fas fa-edit"></i> Edit</span>\n                            <span class="edit-action-btn"><i class="fas fa-trash"></i> Delete</span>\n                        </div>\n                    ':""}\n                        </div>\n                    `);
+            let o=$(`\n                        <div class="message ${n}" data-id="${a}">\n                            <div class="bubble">\n                                <div></div>\n                                <span class="msg-time text-right">${r} ${i}</span>\n                            </div>\n                            ${s?'\n                        <div class="msg-actions">\n                            <span class="edit-action-btn"><i class="fas fa-edit"></i> Edit</span>\n                            <span class="delete-action-btn"><i class="fas fa-trash"></i> Delete</span>\n                        </div>\n                    ':""}\n                        </div>\n                    `);
             o.find(".bubble div:first-child").text(e.content),$("#chatBody").append(o),loadedMessageIds.add(a),t=!0
         })),t&&setTimeout((()=>{$("#chatBody").scrollTop($("#chatBody")[0].scrollHeight)}),50)
     }catch(e){console.error(e)}
 }
 
 async function sendMessage(){
-    // Message එකක් යවන්න නම් අනිවාර්යයෙන්ම wallet එකක් ඕනෙමයි.
-    if(!signer) { alert("Please click 'Connect Wallet' to send messages!"); return; }
     const e=$("#messageInput"),t=$("#sendBtn"),a=e.val().trim();
     if(a&&activeChatUser)try{e.prop("disabled",!0),t.html('<i class="fas fa-spinner fa-spin"></i>');const s=await contract.sendMessage(activeChatUser,a);await s.wait(),e.val(""),await loadChatHistory(),loadMessages()}catch(e){console.error(e)}finally{e.prop("disabled",!1),t.html('<i class="fas fa-paper-plane"></i>'),e.focus()}
 }
 
-$(document).on("click","#labelChatBtn",(async function(){if(!active
+$(document).on("click","#labelChatBtn",(async function(){if(!activeChatUser)return;let e=await getOnChainWalletLabel(activeChatUser)||"",t=prompt("Enter a Name/Label for this wallet address (Leave EMPTY and click OK to REMOVE it):",e);if(null!==t)try{let e;$("#labelChatBtn").html('<i class="fas fa-spinner fa-spin"></i>'),e=""===t.trim()?await contract.removeWalletLabel(activeChatUser):await contract.setWalletLabel(activeChatUser,t.trim()),await e.wait(),await loadChatHistory(),await openConversation(activeChatUser)}catch(e){console.error("Label TX failed:",e),alert("Transaction failed or rejected!")}finally{$("#labelChatBtn").html('<i class="fas fa-tag"></i>')}})),$(document).on("click","#deleteChatBtn",(function(){activeChatUser&&confirm("Do you want to close this chat view?")&&(activeChatUser=null,loadedMessageIds.clear(),$("#activeChatBox").hide(),$("#noChatPlaceholder").show(),loadChatHistory())})),$(document).on("click",".edit-action-btn",(function(){const e=$(this).closest(".message").data("id");let t=prompt("Edit message:");t&&""!==t.trim()&&contract.editMessage(e,t.trim()).then((e=>e.wait())).then((()=>loadMessages())).catch((e=>console.error(e)))})),$(document).on("click",".delete-action-btn",(function(){const e=$(this).closest(".message").data("id");confirm("Delete this message?")&&contract.deleteMessage(e).then((e=>e.wait())).then((()=>loadMessages())).catch((e=>console.error(e)))})),$(document).on("click",".chat-list .chat-item",(function(){openConversation($(this).data("address"))})),$(document).ready((function(){$("#messageInput").keypress((function(e){13===e.which&&sendMessage()}))}));
+</script>
+</body>
+</html>
