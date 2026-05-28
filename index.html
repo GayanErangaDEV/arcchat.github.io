@@ -1,220 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect Wallet - ARC Network</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-    <style>
-        body {
-            background-color: #f0f5f7;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            margin: 0;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Wallet - ARC Network</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #f0f5f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            margin: 0;
+        }
 
-        .connect-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
-        }
+        .connect-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+        }
 
-        .wallet-card {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 77, 64, 0.1);
-            text-align: center;
-            max-width: 450px;
-            width: 100%;
-            border: 1px solid rgba(0, 121, 107, 0.1);
-        }
+        .wallet-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 77, 64, 0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border: 1px solid rgba(0, 121, 107, 0.1);
+        }
 
-        .brand-logo {
-            font-size: 50px;
-            color: #004d40;
-            margin-bottom: 15px;
-        }
+        .brand-logo {
+            font-size: 50px;
+            color: #004d40;
+            margin-bottom: 15px;
+        }
 
-        .wallet-card h2 {
-            color: #004d40;
-            font-weight: 700;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
+        .wallet-card h2 {
+            color: #004d40;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
 
-        .wallet-card p {
-            color: #00796b;
-            font-size: 15px;
-            margin-bottom: 30px;
-        }
+        .wallet-card p {
+            color: #00796b;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
 
-        .btn-connect {
-            background-color: #00796b;
-            border-color: #00796b;
-            color: #ffffff;
-            font-weight: 600;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 121, 107, 0.2);
-        }
+        .btn-connect {
+            background-color: #00796b;
+            border-color: #00796b;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 121, 107, 0.2);
+        }
 
-        .btn-connect:hover {
-            background-color: #004d40;
-            border-color: #004d40;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 77, 64, 0.3);
-        }
+        .btn-connect:hover {
+            background-color: #004d40;
+            border-color: #004d40;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 77, 64, 0.3);
+        }
 
-        .btn-connect:disabled {
-            background-color: #a7ffeb;
-            border-color: #a7ffeb;
-            color: #004d40;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* --- අලුතින් එකතු කරපු Logout (Disconnect) Button Style එක --- */
-        .btn-disconnect {
-            background-color: #e57373;
-            border-color: #e57373;
-            color: #ffffff;
-            font-weight: 600;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(229, 115, 115, 0.2);
-            display: none; /* මුලින්ම පෙනෙන්න නැති වෙන්න */
-        }
-
-        .btn-disconnect:hover {
-            background-color: #c62828;
-            border-color: #c62828;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(198, 40, 40, 0.3);
-        }
-
-        .footer-note {
-            font-size: 12px;
-            color: #00796b;
-            margin-top: 25px;
-            opacity: 0.8;
-        }
-    </style>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+        .footer-note {
+            font-size: 12px;
+            color: #00796b;
+            margin-top: 25px;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="connect-container">
-        <div class="wallet-card">
-            <div class="brand-logo">
-                <i class="fas fa-comments-dollar"></i>
-            </div>
-            
-            <h2 id="card-title">Welcome to ARC Chat</h2>
-            <p id="status-text">Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.</p>
-            
-            <button class="btn btn-connect btn-lg" id="connect-btn" onclick="connectWallet()">
-                <i class="fas fa-wallet mr-2"></i> Connect Wallet
-            </button>
+    <div class="connect-container">
+        <div class="wallet-card">
+            <div class="brand-logo">
+                <i class="fas fa-comments-dollar"></i>
+            </div>
+            
+            <h2>Welcome to ARC Chat</h2>
+            <p>Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.</p>
+            
+            <button class="btn btn-connect btn-lg" onclick="connectWallet()">
+                <i class="fas fa-wallet mr-2"></i> Connect Wallet
+            </button>
+            
+            <div class="footer-note">
+                <i class="fas fa-shield-alt mr-1"></i> Secured by ARC Testnet Blockchain
+            </div>
+        </div>
+    </div>
 
-            <button class="btn btn-disconnect btn-lg" id="disconnect-btn" onclick="disconnectWallet()">
-                <i class="fas fa-sign-out-alt mr-2"></i> Disconnect Wallet
-            </button>
-            
-            <div class="footer-note">
-                <i class="fas fa-shield-alt mr-1"></i> Secured by ARC Testnet Blockchain
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Global variables ටිකක් තියාගන්නවා පසු පාවිච්චියට
-        let provider;
-        let signer;
-
-        // Wallet එක connect කරන Function එක
-        async function connectWallet() {
-            const connectBtn = document.getElementById('connect-btn');
-            const disconnectBtn = document.getElementById('disconnect-btn');
-            const statusText = document.getElementById('status-text');
-            const cardTitle = document.getElementById('card-title');
-
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    connectBtn.disabled = true;
-                    connectBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Connecting...`;
-
-                    provider = new ethers.BrowserProvider(window.ethereum);
-                    signer = await provider.getSigner();
-                    const walletAddress = await signer.getAddress();
-
-                    // Wallet Address එක කෙටි කරලා පෙන්වන්න (උදා: 0x1234...abcd)
-                    const shortAddress = `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`;
-
-                    // UI එක වෙනස් කිරීම (Success State)
-                    cardTitle.innerText = "Wallet Connected";
-                    statusText.innerHTML = `Active Account: <strong>${shortAddress}</strong>`;
-                    
-                    // Connect Button එක හංගලා Logout Button එක පෙන්වනවා
-                    connectBtn.style.display = 'none';
-                    disconnectBtn.style.display = 'block';
-
-                    console.log("Connected to:", walletAddress);
-
-                } catch (error) {
-                    console.error("Connection error:", error);
-                    // Error එකක් ආවොත් බටන් එක සාමාන්‍ය තත්වයට පත් කරනවා
-                    connectBtn.disabled = false;
-                    connectBtn.innerHTML = `<i class="fas fa-wallet mr-2"></i> Connect Wallet`;
-                    
-                    if (error.code === 4001) {
-                        alert("Connection request denied by user.");
-                    } else {
-                        alert("Something went wrong. Please try again.");
-                    }
-                }
-            } else {
-                alert("Please install MetaMask or OKX Wallet extension!");
-            }
-        }
-
-        // Logout / Disconnect කරන Function එක
-        function disconnectWallet() {
-            const connectBtn = document.getElementById('connect-btn');
-            const disconnectBtn = document.getElementById('disconnect-btn');
-            const statusText = document.getElementById('status-text');
-            const cardTitle = document.getElementById('card-title');
-
-            // විචල්‍යයන් (Variables) Clear කරනවා
-            provider = null;
-            signer = null;
-
-            // UI එක මුල් තිබ්බ තත්වයටම පත් කරනවා (Reset UI)
-            cardTitle.innerText = "Welcome to ARC Chat";
-            statusText.innerText = "Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.";
-            
-            // බටන් මාරු කරනවා
-            disconnectBtn.style.display = 'none';
-            connectBtn.style.display = 'block';
-            connectBtn.disabled = false;
-            connectBtn.innerHTML = `<i class="fas fa-wallet mr-2"></i> Connect Wallet`;
-
-            console.log("Wallet disconnected from application UI.");
-        }
-    </script>
+    <script>
+        // Wallet එක connect වන වෙලාවට වැඩ කරන සරල Function එකක්
+        function connectWallet() {
+            // මෙතනට ඔයාගේ මුල් කෝඩ් එකේ තිබ්බ ethers.js wallet connection logic එක දාන්න පුළුවන්
+            alert("Connecting to MetaMask / OKX Wallet...");
+        }
+    </script>
 </body>
 </html>
