@@ -1,61 +1,407 @@
 <!doctype html>
-<html lang=en>
+<html lang="en">
 <head>
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<title>ARC Chat - Secure Messenger</title>
-<link rel=stylesheet href=https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script src=https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js></script>
-<script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js></script>
-<style>body{background-color:#f8f9fa;font-family:'Segoe UI',sans-serif;height:100vh;margin:0;overflow:hidden}.connect-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#eef1f5 0,#d1d8dd 100%)}.wallet-card{background:#fff;padding:40px;border-radius:20px;box-shadow:0 10px 30px rgba(16,34,64,.1);text-align:center;max-width:450px;width:100%;border:1px solid rgba(16,34,64,.1)}.brand-logo{font-size:50px;color:#102240;margin-bottom:15px}.wallet-card h2{color:#102240;font-weight:700;margin-bottom:10px}.btn-connect{background-color:#717d84;border-color:#717d84;color:#fff;font-weight:600;padding:12px 30px;border-radius:50px;width:100%;transition:all .3s ease}.btn-connect:hover{background-color:#102240;border-color:#102240;transform:translateY(-2px)}.app-container{display:none;height:100vh;width:100vw;background:#fff;margin:0}.sidebar{background:#102240;color:#fff;border-right:1px solid #0a1629;display:flex;flex-direction:column;height:100vh}.search-box{padding:15px;background:#102240}.search-box input{background:#717d84;border:none;border-radius:5px;color:#fff;padding:8px 12px;width:100%;outline:0;font-size:14px}.chat-list{flex:1;overflow-y:auto}.chat-item{padding:15px;border-bottom:1px solid #0a1629;cursor:pointer;display:flex;align-items:center;color:#fff}.chat-item.active,.chat-item:hover{background:#717d84;text-decoration:none;color:#fff}.chat-item img{width:40px;height:40px;border-radius:50%;margin-right:12px}.chat-area{display:flex;flex-direction:column;background:#f8f9fa;background-image:url('https://www.transparenttextures.com/patterns/cubes.png');height:100vh}.chat-header{background:#102240;color:#fff;padding:15px 20px;display:flex;align-items:center;border-bottom:1px solid #0a1629;justify-content:space-between}.chat-header-info{display:flex;align-items:center}.chat-header img{width:40px;height:40px;border-radius:50%;margin-right:15px}.chat-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column}.message{margin-bottom:15px;display:flex;flex-direction:column;max-width:70%;position:relative}.message.received{align-items:flex-start;align-self:flex-start}.message.sent{align-items:flex-end;align-self:flex-end}.bubble{padding:10px 15px;border-radius:12px;font-size:14px;color:#fff;word-wrap:break-word}.received .bubble{background:#717d84;border-top-left-radius:0}.sent .bubble{background:#102240;border-top-right-radius:0}.msg-time{font-size:10px;color:#e0e0e0;margin-top:3px;display:block}.msg-actions{font-size:10px;color:#717d84;margin-top:3px;display:flex;gap:10px}.chat-footer{padding:15px;background:#102240;display:flex;align-items:center}.chat-footer input{flex:1;background:#717d84;border:none;border-radius:20px;padding:10px 20px;color:#fff;outline:0}.send-btn{background:0 0;border:none;color:#fff;font-size:22px;margin-left:15px;cursor:pointer}.btn-logout{background:#643873;color:#fff;border:none;padding:10px;margin:10px;border-radius:5px;cursor:pointer}.btn-logout:hover{background:#8e4585}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARC Chat - Secure Messenger</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; height: 100vh; margin: 0; overflow: hidden; }
+        .connect-screen { display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, #eef1f5 0%, #d1d8dd 100%); }
+        .wallet-card { background: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(16, 34, 64, 0.1); text-align: center; max-width: 450px; width: 100%; border: 1px solid rgba(16, 34, 64, 0.1); }
+        .brand-logo { font-size: 50px; color: #102240; margin-bottom: 15px; }
+        .wallet-card h2 { color: #102240; font-weight: 700; margin-bottom: 10px; }
+        .btn-connect { background-color: #717D84; border-color: #717D84; color: #ffffff; font-weight: 600; padding: 12px 30px; border-radius: 50px; width: 100%; transition: all 0.3s ease; }
+        .btn-connect:hover { background-color: #102240; border-color: #102240; transform: translateY(-2px); }
+        .app-container { display: none; height: 100vh; width: 100vw; background: #fff; margin: 0; }
+        .sidebar { background: #102240; color: #fff; border-right: 1px solid #0a1629; display: flex; flex-direction: column; height: 100vh; }
+        .search-box { padding: 15px; background: #102240; }
+        .search-box input { background: #717D84; border: none; border-radius: 5px; color: #fff; padding: 8px 12px; width: 100%; outline: 0; font-size: 14px; }
+        .chat-list { flex: 1; overflow-y: auto; }
+        .chat-item { padding: 15px; border-bottom: 1px solid #0a1629; cursor: pointer; display: flex; align-items: center; color: #fff; }
+        .chat-item.active, .chat-item:hover { background: #717D84; text-decoration: none; color: #fff; }
+        .chat-item img { width: 40px; height: 40px; border-radius: 50%; margin-right: 12px; }
+        .chat-area { display: flex; flex-direction: column; background: #f8f9fa; background-image: url('https://www.transparenttextures.com/patterns/cubes.png'); height: 100vh; }
+        .chat-header { background: #102240; color: #fff; padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #0a1629; justify-content: space-between; }
+        .chat-header-info { display: flex; align-items: center; }
+        .chat-header img { width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; }
+        .chat-body { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
+        .message { margin-bottom: 15px; display: flex; flex-direction: column; max-width: 70%; position: relative; }
+        .message.received { align-items: flex-start; align-self: flex-start; }
+        .message.sent { align-items: flex-end; align-self: flex-end; }
+        .bubble { padding: 10px 15px; border-radius: 12px; font-size: 14px; color: #fff; word-wrap: break-word; }
+        .received .bubble { background: #717D84; border-top-left-radius: 0; }
+        .sent .bubble { background: #102240; border-top-right-radius: 0; }
+        .msg-time { font-size: 10px; color: #e0e0e0; margin-top: 3px; display: block; }
+        .msg-actions { font-size: 10px; color: #717D84; margin-top: 3px; display: flex; gap: 10px; }
+        .chat-footer { padding: 15px; background: #102240; display: flex; align-items: center; }
+        .chat-footer input { flex: 1; background: #717D84; border: none; border-radius: 20px; padding: 10px 20px; color: #fff; outline: 0; }
+        .send-btn { background: 0 0; border: none; color: #fff; font-size: 22px; margin-left: 15px; cursor: pointer; }
+        .btn-logout { background: #643873; color: white; border: none; padding: 10px; margin: 10px; border-radius: 5px; cursor: pointer; }
+        .btn-logout:hover { background: #8E4585; }
+    </style>
 </head>
 <body>
-<div class=connect-screen id=connectScreen>
-<div class=wallet-card>
-<div class=brand-logo><i class="fas fa-comments"></i></div>
-<h2>ARC Chat</h2>
-<p>Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.</p>
-<button class="btn btn-connect btn-lg" id=connectWalletBtn onclick=connectWallet()>
-<i class="fas fa-wallet mr-2"></i> Connect Wallet
-</button>
-<div class="mt-3 text-muted" id=syncStatus style=font-size:11px> Checking Web3 provider...</div>
+
+<div class="connect-screen" id="connectScreen">
+    <div class="wallet-card">
+        <div class="brand-logo"><i class="fas fa-comments"></i></div>
+        <h2>ARC Chat</h2>
+        <p>Connect your Web3 Wallet to start secure, end-to-end blockchain conversations.</p>
+        <button class="btn btn-connect btn-lg" id="connectWalletBtn" onclick="connectWallet()">
+            <i class="fas fa-wallet mr-2"></i> Connect Wallet
+        </button>
+        <div class="mt-3 text-muted" id="syncStatus" style="font-size: 11px;"> Checking Web3 provider...</div>
+    </div>
 </div>
+
+<div class="app-container row no-gutters" id="appScreen">
+    <div class="col-md-4 col-4 sidebar">
+        <div class="search-box">
+            <input id="searchAddressInput" placeholder="Search Wallet Address + Enter..." onkeypress="handleSearch(event)">
+        </div>
+        <div class="chat-list" id="chatListContainer"></div>
+        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+    
+    <div class="col-md-8 col-8 chat-area" id="chatAreaContainer">
+        <div class="no-chat-selected" id="noChatPlaceholder" style="display:flex; align-items:center; justify-content:center; height:100%; color:#102240; font-weight:500;">
+            Select or search a user to start conversation
+        </div>
+        
+        <div id="activeChatBox" style="display:none; flex-direction:column; height:100%">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <img src="https://ui-avatars.com/api/?name=User&background=random" id="activeChatAvatar" alt="Avatar">
+                    <div>
+                        <h5 class="mb-0" id="activeChatTitle">0x000...000</h5>
+                        <small class="text-info" id="activeChatSubtitle" style="color:#e0e0e0!important">End-to-End Blockchain Chat</small>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="label-chat-btn" id="labelChatBtn" title="Set/Remove Wallet Tag Name" style="cursor:pointer; color:#e0e0e0;"><i class="fas fa-tag"></i></div>
+                    <div class="delete-chat-btn" id="deleteChatBtn" title="Close conversation view" style="cursor:pointer; color:#ffab91;"><i class="fas fa-trash-alt"></i></div>
+                </div>
+            </div>
+            <div class="chat-body" id="chatBody"></div>
+            <div class="chat-footer">
+                <input id="messageInput" placeholder="Write a message...">
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="app-container row no-gutters" id=appScreen>
-<div class="col-md-4 col-4 sidebar">
-<div class=search-box>
-<input id=searchAddressInput placeholder="Search Wallet Address + Enter..." onkeypress=handleSearch(event)>
-</div>
-<div class=chat-list id=chatListContainer></div>
-<button class=btn-logout onclick=logout()><i class="fas fa-sign-out-alt"></i> Logout</button>
-</div>
-<div class="col-md-8 col-8 chat-area" id=chatAreaContainer>
-<div class=no-chat-selected id=noChatPlaceholder style=display:flex;align-items:center;justify-content:center;height:100%;color:#102240;font-weight:500>
-Select or search a user to start conversation
-</div>
-<div id=activeChatBox style=display:none;flex-direction:column;height:100%>
-<div class=chat-header>
-<div class=chat-header-info>
-<img src="https://ui-avatars.com/api/?name=User&background=random" id=activeChatAvatar alt=Avatar>
-<div>
-<h5 class=mb-0 id=activeChatTitle>0x000...000</h5>
-<small class=text-info id=activeChatSubtitle style=color:#e0e0e0!important>End-to-End Blockchain Chat</small>
-</div>
-</div>
-<div class=header-actions>
-<div class=label-chat-btn id=labelChatBtn title="Set/Remove Wallet Tag Name" style=cursor:pointer;color:#e0e0e0><i class="fas fa-tag"></i></div>
-<div class=delete-chat-btn id=deleteChatBtn title="Close conversation view" style=cursor:pointer;color:#ffab91><i class="fas fa-trash-alt"></i></div>
-</div>
-</div>
-<div class=chat-body id=chatBody></div>
-<div class=chat-footer>
-<input id=messageInput placeholder="Write a message...">
-<button class=send-btn id=sendBtn onclick=sendMessage()><i class="fas fa-paper-plane"></i></button>
-</div>
-</div>
-</div>
-</div>
-<script>const ARC_CHAIN_ID_DECIMAL=5042002,CONTRACT_ADDRESS="0xfabD9624E0e46437D67d9601D4021cA9571BEE24",contractABI=["function sendMessage(address _receiver, string _content) public","function getMessagesWith(address _otherPerson) public view returns (tuple(uint256 id, address sender, address receiver, string content, uint256 timestamp, bool isEdited, bool isDeleted)[] memory)","function editMessage(uint256 _id, string _newContent) public","function deleteMessage(uint256 _id) public","function setWalletLabel(address _wallet, string _label) public","function removeWalletLabel(address _wallet) public","function getWalletLabel(address _user, address _wallet) public view returns (string memory)","function getUserChatList(address _user) public view returns (tuple(address walletAddress, uint256 lastMessageTimestamp)[] memory)"],RPC_URLS=["https://rpc.testnet.arc.network","https://arc-testnet.drpc.org"];let provider,signer,contract,contractWithSigner,userAccount,activeChatUser=null,loadedMessageIds=new Set,globalSyncInterval=null,activeRpcUrl=RPC_URLS[0];function logout(){userAccount=null,activeChatUser=null,loadedMessageIds.clear(),globalSyncInterval&&(clearInterval(globalSyncInterval),globalSyncInterval=null),$("#appScreen").hide(),$("#connectScreen").show(),$("#chatListContainer").html(""),$("#activeChatBox").hide(),$("#noChatPlaceholder").show(),console.log("Logged out successfully.")}async function getBestRpcUrl(){try{const e=RPC_URLS.map((async e=>{const t=Date.now();try{if((await fetch(e,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",method:"net_version",params:[],id:1}),signal:AbortSignal.timeout(2e3)})).ok)return{url:e,latency:Date.now()-t}}catch(t){console.warn(`${e} RPC target delayed or down.`)}return{url:e,latency:1/0}})),t=await Promise.all(e);return t.sort(((e,t)=>e.latency-t.latency)),t[0].latency!==1/0?t[0].url:RPC_URLS[0]}catch(e){return RPC_URLS[0]}}async function ensureArcNetwork(){const e="0x"+5042002..toString(16);try{await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:e}]})}catch(t){if(4902!==t.code)throw t;await window.ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:e,chainName:"ARC Testnet",rpcUrls:[activeRpcUrl],nativeCurrency:{name:"ARC",symbol:"ARC",decimals:18},blockExplorerUrls:["https://testnet.arcscan.app"]}]})}provider=new ethers.providers.Web3Provider(window.ethereum),signer=provider.getSigner(),contractWithSigner=new ethers.Contract(CONTRACT_ADDRESS,contractABI,signer)}async function initApp(){try{signer=provider.getSigner();const e=new ethers.providers.JsonRpcProvider(activeRpcUrl);contract=new ethers.Contract(CONTRACT_ADDRESS,contractABI,e),contractWithSigner=new ethers.Contract(CONTRACT_ADDRESS,contractABI,signer),$("#connectScreen").hide(),$("#appScreen").css("display","flex"),await loadChatHistory(),startGlobalSync()}catch(e){console.error("Initialization failed:",e)}}async function connectWallet(){if(void 0!==window.ethereum){const e=$("#connectWalletBtn");try{e.prop("disabled",!0).html('<i class="fas fa-spinner fa-spin mr-2"></i> Connecting...');const t=await window.ethereum.request({method:"eth_requestAccounts"});userAccount=t[0],await ensureArcNetwork(),await initApp()}catch(e){console.error(e),alert("Wallet connection rejected or network switch failed.")}finally{e.prop("disabled",!1).html('<i class="fas fa-wallet mr-2"></i> Connect Wallet')}}else alert("Please install MetaMask or OKX Wallet!")}function startGlobalSync(){globalSyncInterval&&clearInterval(globalSyncInterval),globalSyncInterval=setInterval((async()=>{if(userAccount)try{await loadChatHistory(!0),activeChatUser&&await loadMessages()}catch(e){console.error("Sync node issue...",e)}}),3e3)}async function getOnChainWalletLabel(e){try{const t=await contract.getWalletLabel(userAccount,e);return t&&""!==t.trim()?t:null}catch(e){return null}}async function loadChatHistory(e=!1){let t=$("#chatListContainer");try{const e=await contract.getUserChatList(userAccount);if(e&&e.length>0){let a="",s=[...e].sort(((e,t)=>t.lastMessageTimestamp.toNumber()-e.lastMessageTimestamp.toNumber()));for(let e of s){let t=e.walletAddress,s=new Date(1e3*e.lastMessageTimestamp.toNumber()).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),n=await getOnChainWalletLabel(t),i=activeChatUser&&activeChatUser.toLowerCase()===t.toLowerCase()?"active":"",r=n?`${n} <small style="display:block; font-size:10px; opacity:0.7;">${t.substring(0,6)}...${t.substring(38)}</small>`:`<strong>${t.substring(0,6)}...${t.substring(38)}</strong>`;a+=`\n                    <div class="chat-item ${i}" data-address="${t}">\n                        <img src="https://ui-avatars.com/api/?name=${n||t}&background=random">\n                        <div style="flex:1; min-width:0; padding-right:10px;">${r}</div>\n                        <small style="font-size:10px; color:#e0e0e0; align-self:flex-start; margin-top:4px;">${s}</small>\n                    </div>\n                `}t.html(a)}else t.html('<p class="text-center text-muted mt-4" style="font-size: 12px; color: #e0e0e0 !important;">Search an address to start a chat</p>')}catch(e){console.error("Fetch History Error:",e)}}function handleSearch(e){if("Enter"===e.key){let e=$("#searchAddressInput").val().trim();if(!ethers.utils.isAddress(e))return alert("Invalid Address!");if(e.toLowerCase()===userAccount.toLowerCase())return alert("You cannot chat with yourself!");openConversation(e),$("#searchAddressInput").val("")}}async function openConversation(e){activeChatUser=e,loadedMessageIds.clear();let t=await getOnChainWalletLabel(e);$("#noChatPlaceholder").hide(),$("#activeChatBox").css("display","flex"),t?($("#activeChatTitle").text(t),$("#activeChatSubtitle").text(e)):($("#activeChatTitle").text(e.substring(0,6)+"..."+e.substring(38)),$("#activeChatSubtitle").text("End-to-End Blockchain Chat")),$("#activeChatAvatar").attr("src",`https://ui-avatars.com/api/?name=${t||e}&background=random`),$("#chatBody").html('<p class="text-center text-muted placeholder-loading">Loading secure messages...</p>'),loadMessages()}async function loadMessages(){if(activeChatUser)try{const e=await contractWithSigner.getMessagesWith(activeChatUser);if($(".placeholder-loading").remove(),0===e.length&&0===loadedMessageIds.size)return void $("#chatBody").html('<p class="text-center text-muted no-msg-notice" style="margin-top:20px; color: #102240;">No messages yet.</p>');let t=!1;e.forEach((e=>{const a=e.id.toString();if(e.isDeleted)return $(`[data-id="${a}"]`).remove(),void loadedMessageIds.delete(a);const s=e.sender.toLowerCase()===userAccount.toLowerCase(),n=s?"sent":"received",i=e.isEdited?"<small style='font-size:10px; color:#e0e0e0;'>(edited)</small>":"",r=new Date(1e3*e.timestamp.toNumber()).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});if(loadedMessageIds.has(a)){let t=$(`[data-id="${a}"] .bubble div:first-child`);return void(t.text()!==e.content&&(t.text(e.content),$(`[data-id="${a}"] .msg-time`).html(`${r} ${i}`)))}$(".no-msg-notice").remove();let o=$(`\n                <div class="message ${n}" data-id="${a}">\n                    <div class="bubble"><div></div><span class="msg-time text-right">${r} ${i}</span></div>\n                    ${s?'<div class="msg-actions"><span class="edit-action-btn"><i class="fas fa-edit"></i> Edit</span> <span class="delete-action-btn"><i class="fas fa-trash"></i> Delete</span></div>':""}\n                </div>\n            `);o.find(".bubble div:first-child").text(e.content),$("#chatBody").append(o),loadedMessageIds.add(a),t=!0})),t&&setTimeout((()=>{$("#chatBody").scrollTop($("#chatBody")[0].scrollHeight)}),50)}catch(e){console.error("Message Fetch Error:",e)}}async function sendMessage(){const e=$("#messageInput"),t=$("#sendBtn"),a=e.val().trim();if(a&&activeChatUser)try{e.prop("disabled",!0),t.html('<i class="fas fa-spinner fa-spin"></i>');(await window.ethereum.request({method:"eth_chainId"})).toLowerCase()!=="0x"+5042002..toString(16)&&await ensureArcNetwork();const s=await contractWithSigner.sendMessage(activeChatUser,a);await s.wait(),e.val(""),await loadChatHistory(),loadMessages()}catch(e){console.error(e),alert("Transaction failed or canceled by user.")}finally{e.prop("disabled",!1),t.html('<i class="fas fa-paper-plane"></i>'),e.focus()}}$(document).ready((async function(){if(window.ethereum)try{provider=new ethers.providers.Web3Provider(window.ethereum),$("#syncStatus").text("Checking network latency..."),activeRpcUrl=await getBestRpcUrl();const e=await provider.listAccounts();e.length>0?(userAccount=e[0],$("#syncStatus").html('<i class="fas fa-spinner fa-spin"></i> Restoring secure session...'),await initApp()):$("#syncStatus").text("Please connect your wallet to continue."),window.ethereumListenersSet||(window.ethereum.on("accountsChanged",(e=>{window.location.reload()})),window.ethereum.on("chainChanged",(()=>window.location.reload())),window.ethereumListenersSet=!0)}catch(e){console.error("Initialization error:",e)}else $("#syncStatus").text("MetaMask or OKX Wallet extension required.")})),$(document).on("click","#labelChatBtn",(async function(){if(!activeChatUser)return;let e=await getOnChainWalletLabel(activeChatUser)||"",t=prompt("Enter a Name/Label for this wallet address (Leave EMPTY and click OK to REMOVE it):",e);if(null!==t)try{$("#labelChatBtn").html('<i class="fas fa-spinner fa-spin"></i>');let e=""===t.trim()?await contractWithSigner.removeWalletLabel(activeChatUser):await contractWithSigner.setWalletLabel(activeChatUser,t.trim());await e.wait(),await loadChatHistory(),await openConversation(activeChatUser)}catch(e){console.error(e),alert("Transaction failed!")}finally{$("#labelChatBtn").html('<i class="fas fa-tag"></i>')}})),$(document).on("click","#deleteChatBtn",(function(){activeChatUser&&confirm("Do you want to close this chat view?")&&(activeChatUser=null,loadedMessageIds.clear(),$("#activeChatBox").hide(),$("#noChatPlaceholder").show(),loadChatHistory())})),$(document).on("click",".edit-action-btn",(function(){const e=$(this).closest(".message").data("id");let t=prompt("Edit message:");t&&""!==t.trim()&&contractWithSigner.editMessage(e,t.trim()).then((e=>e.wait())).then((()=>loadMessages())).catch((e=>console.error(e)))})),$(document).on("click",".delete-action-btn",(function(){const e=$(this).closest(".message").data("id");confirm("Delete this message?")&&contractWithSigner.deleteMessage(e).then((e=>e.wait())).then((()=>loadMessages())).catch((e=>console.error(e)))})),$(document).on("click",".chat-list .chat-item",(function(){openConversation($(this).data("address"))})),$(document).ready((function(){$("#messageInput").keypress((function(e){13===e.which&&sendMessage()}))}))</script>
+
+<script>
+const ARC_CHAIN_ID_DECIMAL = 5042002;
+const CONTRACT_ADDRESS = "0xfabD9624E0e46437D67d9601D4021cA9571BEE24";
+const contractABI = [
+    "function sendMessage(address _receiver, string _content) public",
+    "function getMessagesWith(address _otherPerson) public view returns (tuple(uint256 id, address sender, address receiver, string content, uint256 timestamp, bool isEdited, bool isDeleted)[] memory)",
+    "function editMessage(uint256 _id, string _newContent) public",
+    "function deleteMessage(uint256 _id) public",
+    "function setWalletLabel(address _wallet, string _label) public",
+    "function removeWalletLabel(address _wallet) public",
+    "function getWalletLabel(address _user, address _wallet) public view returns (string memory)",
+    "function getUserChatList(address _user) public view returns (tuple(address walletAddress, uint256 lastMessageTimestamp)[] memory)"
+];
+
+const RPC_URLS = ["https://rpc.testnet.arc.network", "https://arc-testnet.drpc.org"];
+let provider, signer, contract, contractWithSigner, userAccount, activeChatUser = null, loadedMessageIds = new Set(), globalSyncInterval = null;
+let activeRpcUrl = RPC_URLS[0]; 
+
+// --- NEW LOGOUT FUNCTION ---
+function logout() {
+    // 1. Clear session data
+    userAccount = null;
+    activeChatUser = null;
+    loadedMessageIds.clear();
+    
+    // 2. Clear background intervals
+    if (globalSyncInterval) {
+        clearInterval(globalSyncInterval);
+        globalSyncInterval = null;
+    }
+
+    // 3. Reset UI
+    $("#appScreen").hide();
+    $("#connectScreen").show();
+    $("#chatListContainer").html("");
+    $("#activeChatBox").hide();
+    $("#noChatPlaceholder").show();
+    
+    console.log("Logged out successfully.");
+}
+
+// ... Rest of your original functions (getBestRpcUrl, ensureArcNetwork, etc.) ...
+async function getBestRpcUrl() {
+    try {
+        const promises = RPC_URLS.map(async (url) => {
+            const start = Date.now();
+            try {
+                const response = await fetch(url, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jsonrpc: "2.0", method: "net_version", params: [], id: 1 }),
+                    signal: AbortSignal.timeout(2000) 
+                });
+                if (response.ok) return { url, latency: Date.now() - start };
+            } catch (e) { console.warn(`${url} RPC target delayed or down.`); }
+            return { url, latency: Infinity }; 
+        });
+        const results = await Promise.all(promises);
+        results.sort((a, b) => a.latency - b.latency);
+        return results[0].latency !== Infinity ? results[0].url : RPC_URLS[0];
+    } catch (err) { return RPC_URLS[0]; }
+}
+
+async function ensureArcNetwork() {
+    const targetChainIdHex = "0x" + ARC_CHAIN_ID_DECIMAL.toString(16);
+    try {
+        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: targetChainIdHex }] });
+    } catch (switchError) {
+        if (switchError.code === 4902) {
+            await window.ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [{ chainId: targetChainIdHex, chainName: "ARC Testnet", rpcUrls: [activeRpcUrl], nativeCurrency: { name: "ARC", symbol: "ARC", decimals: 18 }, blockExplorerUrls: ["https://testnet.arcscan.app"] }]
+            });
+        } else { throw switchError; }
+    }
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    signer = provider.getSigner();
+    contractWithSigner = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
+}
+
+$(document).ready(async function() {
+    if (window.ethereum) {
+        try {
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            $("#syncStatus").text("Checking network latency...");
+            activeRpcUrl = await getBestRpcUrl();
+            const accounts = await provider.listAccounts();
+            if (accounts.length > 0) {
+                userAccount = accounts[0];
+                $("#syncStatus").html('<i class="fas fa-spinner fa-spin"></i> Restoring secure session...');
+                await initApp();
+            } else { $("#syncStatus").text("Please connect your wallet to continue."); }
+
+            if (!window.ethereumListenersSet) {
+                window.ethereum.on("accountsChanged", (accounts) => { window.location.reload(); });
+                window.ethereum.on("chainChanged", () => window.location.reload());
+                window.ethereumListenersSet = true;
+            }
+        } catch (err) { console.error("Initialization error:", err); }
+    } else { $("#syncStatus").text("MetaMask or OKX Wallet extension required."); }
+});
+
+async function initApp() {
+    try {
+        signer = provider.getSigner();
+        const rpcProvider = new ethers.providers.JsonRpcProvider(activeRpcUrl);
+        contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, rpcProvider);
+        contractWithSigner = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
+        $("#connectScreen").hide();
+        $("#appScreen").css("display", "flex");
+        await loadChatHistory();
+        startGlobalSync();
+    } catch (error) { console.error("Initialization failed:", error); }
+}
+
+async function connectWallet() {
+    if (typeof window.ethereum !== 'undefined') {
+        const btn = $("#connectWalletBtn");
+        try {
+            btn.prop("disabled", true).html('<i class="fas fa-spinner fa-spin mr-2"></i> Connecting...');
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+            userAccount = accounts[0];
+            await ensureArcNetwork();
+            await initApp();
+        } catch (e) { console.error(e); alert("Wallet connection rejected or network switch failed."); } 
+        finally { btn.prop("disabled", false).html('<i class="fas fa-wallet mr-2"></i> Connect Wallet'); }
+    } else { alert("Please install MetaMask or OKX Wallet!"); }
+}
+
+function startGlobalSync() {
+    globalSyncInterval && clearInterval(globalSyncInterval);
+    globalSyncInterval = setInterval((async () => {
+        if (!userAccount) return; // Stop if logged out
+        try {
+            await loadChatHistory(true);
+            if (activeChatUser) await loadMessages();
+        } catch (err) { console.error("Sync node issue...", err); }
+    }), 3000); 
+}
+
+async function getOnChainWalletLabel(address) {
+    try { const label = await contract.getWalletLabel(userAccount, address); return label && label.trim() !== "" ? label : null; } 
+    catch (e) { return null; }
+}
+
+async function loadChatHistory(isBackground = false) {
+    let container = $("#chatListContainer");
+    try {
+        const chatList = await contract.getUserChatList(userAccount);
+        if (chatList && chatList.length > 0) {
+            let htmlContent = "";
+            let sortedChats = [...chatList].sort((a, b) => b.lastMessageTimestamp.toNumber() - a.lastMessageTimestamp.toNumber());
+            for (let chat of sortedChats) {
+                let address = chat.walletAddress;
+                let timeStr = new Date(1000 * chat.lastMessageTimestamp.toNumber()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                let label = await getOnChainWalletLabel(address);
+                let activeClass = activeChatUser && activeChatUser.toLowerCase() === address.toLowerCase() ? "active" : "";
+                let displayTitle = label ? `${label} <small style="display:block; font-size:10px; opacity:0.7;">${address.substring(0, 6)}...${address.substring(38)}</small>` : `<strong>${address.substring(0, 6)}...${address.substring(38)}</strong>`;
+                htmlContent += `
+                    <div class="chat-item ${activeClass}" data-address="${address}">
+                        <img src="https://ui-avatars.com/api/?name=${label || address}&background=random">
+                        <div style="flex:1; min-width:0; padding-right:10px;">${displayTitle}</div>
+                        <small style="font-size:10px; color:#e0e0e0; align-self:flex-start; margin-top:4px;">${timeStr}</small>
+                    </div>
+                `;
+            }
+            container.html(htmlContent);
+        } else { container.html('<p class="text-center text-muted mt-4" style="font-size: 12px; color: #e0e0e0 !important;">Search an address to start a chat</p>'); }
+    } catch (err) { console.error("Fetch History Error:", err); }
+}
+
+function handleSearch(event) {
+    if (event.key === "Enter") {
+        let inputAddress = $("#searchAddressInput").val().trim();
+        if (!ethers.utils.isAddress(inputAddress)) return alert("Invalid Address!");
+        if (inputAddress.toLowerCase() === userAccount.toLowerCase()) return alert("You cannot chat with yourself!");
+        openConversation(inputAddress);
+        $("#searchAddressInput").val("");
+    }
+}
+
+async function openConversation(address) {
+    activeChatUser = address;
+    loadedMessageIds.clear();
+    let label = await getOnChainWalletLabel(address);
+    $("#noChatPlaceholder").hide();
+    $("#activeChatBox").css("display", "flex");
+    if (label) {
+        $("#activeChatTitle").text(label);
+        $("#activeChatSubtitle").text(address);
+    } else {
+        $("#activeChatTitle").text(address.substring(0, 6) + "..." + address.substring(38));
+        $("#activeChatSubtitle").text("End-to-End Blockchain Chat");
+    }
+    $("#activeChatAvatar").attr("src", `https://ui-avatars.com/api/?name=${label || address}&background=random`);
+    $("#chatBody").html('<p class="text-center text-muted placeholder-loading">Loading secure messages...</p>');
+    loadMessages();
+}
+
+async function loadMessages() {
+    if (!activeChatUser) return;
+    try {
+        const messages = await contractWithSigner.getMessagesWith(activeChatUser);
+        $(".placeholder-loading").remove();
+        if (messages.length === 0 && loadedMessageIds.size === 0) {
+            $("#chatBody").html('<p class="text-center text-muted no-msg-notice" style="margin-top:20px; color: #102240;">No messages yet.</p>');
+            return;
+        }
+        let shouldScroll = false;
+        messages.forEach((msg) => {
+            const msgId = msg.id.toString();
+            if (msg.isDeleted) {
+                $(`[data-id="${msgId}"]`).remove();
+                loadedMessageIds.delete(msgId);
+                return;
+            }
+            const isSent = msg.sender.toLowerCase() === userAccount.toLowerCase();
+            const alignClass = isSent ? "sent" : "received";
+            const editedBadge = msg.isEdited ? "<small style='font-size:10px; color:#e0e0e0;'>(edited)</small>" : "";
+            const timeStr = new Date(msg.timestamp.toNumber() * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            if (loadedMessageIds.has(msgId)) {
+                let msgContentDiv = $(`[data-id="${msgId}"] .bubble div:first-child`);
+                if (msgContentDiv.text() !== msg.content) {
+                    msgContentDiv.text(msg.content);
+                    $(`[data-id="${msgId}"] .msg-time`).html(`${timeStr} ${editedBadge}`);
+                }
+                return;
+            }
+            $(".no-msg-notice").remove();
+            let messageHtml = $(`
+                <div class="message ${alignClass}" data-id="${msgId}">
+                    <div class="bubble"><div></div><span class="msg-time text-right">${timeStr} ${editedBadge}</span></div>
+                    ${isSent ? `<div class="msg-actions"><span class="edit-action-btn"><i class="fas fa-edit"></i> Edit</span> <span class="delete-action-btn"><i class="fas fa-trash"></i> Delete</span></div>` : ""}
+                </div>
+            `);
+            messageHtml.find(".bubble div:first-child").text(msg.content);
+            $("#chatBody").append(messageHtml);
+            loadedMessageIds.add(msgId);
+            shouldScroll = true;
+        });
+        if (shouldScroll) setTimeout(() => { $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight); }, 50);
+    } catch (err) { console.error("Message Fetch Error:", err); }
+}
+
+async function sendMessage() {
+    const inputField = $("#messageInput");
+    const sendButton = $("#sendBtn");
+    const messageContent = inputField.val().trim();
+    if (messageContent && activeChatUser) {
+        try {
+            inputField.prop("disabled", true);
+            sendButton.html('<i class="fas fa-spinner fa-spin"></i>');
+            const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+            if (currentChainId.toLowerCase() !== "0x" + ARC_CHAIN_ID_DECIMAL.toString(16)) await ensureArcNetwork();
+            const tx = await contractWithSigner.sendMessage(activeChatUser, messageContent);
+            await tx.wait();
+            inputField.val("");
+            await loadChatHistory();
+            loadMessages();
+        } catch (e) { console.error(e); alert("Transaction failed or canceled by user."); } 
+        finally { inputField.prop("disabled", false); sendButton.html('<i class="fas fa-paper-plane"></i>'); inputField.focus(); }
+    }
+}
+
+$(document).on("click", "#labelChatBtn", async function() {
+    if (!activeChatUser) return;
+    let currentLabel = await getOnChainWalletLabel(activeChatUser) || "";
+    let newLabel = prompt("Enter a Name/Label for this wallet address (Leave EMPTY and click OK to REMOVE it):", currentLabel);
+    if (newLabel !== null) {
+        try {
+            $("#labelChatBtn").html('<i class="fas fa-spinner fa-spin"></i>');
+            let tx = (newLabel.trim() === "") ? await contractWithSigner.removeWalletLabel(activeChatUser) : await contractWithSigner.setWalletLabel(activeChatUser, newLabel.trim());
+            await tx.wait();
+            await loadChatHistory();
+            await openConversation(activeChatUser);
+        } catch (e) { console.error(e); alert("Transaction failed!"); } 
+        finally { $("#labelChatBtn").html('<i class="fas fa-tag"></i>'); }
+    }
+});
+
+$(document).on("click", "#deleteChatBtn", function() { 
+    if (activeChatUser && confirm("Do you want to close this chat view?")) {
+        activeChatUser = null;
+        loadedMessageIds.clear();
+        $("#activeChatBox").hide();
+        $("#noChatPlaceholder").show();
+        loadChatHistory();
+    }
+});
+
+$(document).on("click", ".edit-action-btn", function() { 
+    const msgId = $(this).closest(".message").data("id"); 
+    let newContent = prompt("Edit message:"); 
+    if (newContent && newContent.trim() !== "") {
+        contractWithSigner.editMessage(msgId, newContent.trim()).then(tx => tx.wait()).then(() => loadMessages()).catch(err => console.error(err));
+    }
+});
+
+$(document).on("click", ".delete-action-btn", function() { 
+    const msgId = $(this).closest(".message").data("id"); 
+    if (confirm("Delete this message?")) {
+        contractWithSigner.deleteMessage(msgId).then(tx => tx.wait()).then(() => loadMessages()).catch(err => console.error(err));
+    }
+});
+
+$(document).on("click", ".chat-list .chat-item", function() { openConversation($(this).data("address")); });
+$(document).ready(function() { $("#messageInput").keypress(function(e) { if (e.which === 13) sendMessage(); }); });
+</script>
 </body>
 </html>
